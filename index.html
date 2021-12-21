@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Forfex</title>
+	</head>
+	<body>
+		<form onsubmit="partir(this);return false">
+			<input type="file" name="archivo" required />
+			<button type="submit">Cortar</button>
+		</form>
+		<div id="trozos"></div>
+		<form onsubmit="juntar(this);return false;">
+				<input required type="file" name="archivos" multiple />
+			</div>
+			<button type="submit">Regenerar</button>
+		</form>
+		<div id="enteros"></div>
+		<script src="shamir.js"></script>
+		<script>
+			var forfex = new Forfex()
+
+			async function juntar( formulario ) {
+				const archivos = formulario.elements.archivos.files
+				let trozosDeDocumento = []
+				for(trozo of archivos) {
+					const tirita = await forfex.dataToUint8Array( new Blob( [trozo] ) )
+					trozosDeDocumento.push( tirita )
+					//~ debugger
+				}
+
+				try {
+					const documento = forfex.recover( trozosDeDocumento )
+					//~ const hashHex = await obtenerHash(documento)
+					//~ const tipo = revisarMime( documento.subarray(0, 4) )
+					//~ console.log("Empieza descarga")
+					forfex.downloadBlob(documento, "archivoRecon", "txt", "enteros")
+				}
+				catch(err) {
+					alert(err.message)
+				}
+			}
+
+			async function partir(formulario) {
+				const archivo = formulario.elements.archivo.files[0]
+
+				const secretoUint8 = await forfex.dataToUint8Array( new Blob( [archivo] ) )
+
+				const hashHex = await forfex.hash(secretoUint8)
+
+				const partes = forfex.share(secretoUint8, 5, 3)
+
+				let c = 0
+				for(tirita of partes) {
+					forfex.downloadBlob(tirita, ++c+"-" + hashHex + ".bin", "application/octet-stream", "trozos")
+				}
+			}
+		</script>
+	</body>
+</html>
