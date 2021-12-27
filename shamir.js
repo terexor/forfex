@@ -17,7 +17,7 @@ var Forfex = function() {
 	// El primo 65537 satisface: 
 	// 1. Es el menor primo más grande que 2 bytes, FFFF = 65535 base 10.
 	// 2. El campo que resulta es Z_p*={1, 2, ..., 65536}, por lo cual el único valor conflictivo es el 65536
-	// que directamente como byte de entrada no puede existir, pero sí al hallar el inverso de cualquier otro número,
+	// que directamente como 2 bytes de entrada no puede existir, pero sí al hallar el inverso de cualquier otro número,
 	// sin embargo 65536 es un número cuyo inverso es el mismo, entonces cualquier conflicto se desvanece. 
 	// 3. Los dos primos semillas elegidos 3 y 21846 se comportan adecuadamente en la tabla de inversos
 	const Q = 65537 // p = 65537 
