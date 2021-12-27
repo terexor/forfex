@@ -4,6 +4,9 @@
 		<title>Forfex</title>
 	</head>
 	<body>
+		<header>
+			<h1>😎 Forfex 😎</h1>
+		</header>
 		<form onsubmit="partir(this);return false">
 			<input type="file" name="archivo" required />
 			<button type="submit">Cortar</button>
@@ -13,7 +16,7 @@
 				<input required type="file" name="archivos" multiple />
 			</div>
 			<button type="submit">Regenerar</button>
-		</form>
+		</form>	
 		<div id="enteros"></div>
 		<script src="shamir.js"></script>
 		<script>
@@ -23,7 +26,7 @@
 				const archivos = formulario.elements.archivos.files
 				let trozosDeDocumento = []
 				for(trozo of archivos) {
-					const tirita = await forfex.dataToUint8Array( new Blob( [trozo] ) )
+					const tirita = await forfex.dataToUint16Array( new Blob( [trozo] ) )
 					trozosDeDocumento.push( tirita )
 					//~ debugger
 				}
@@ -43,11 +46,11 @@
 			async function partir(formulario) {
 				const archivo = formulario.elements.archivo.files[0]
 
-				const secretoUint8 = await forfex.dataToUint8Array( new Blob( [archivo] ) )
+				const secretoUint16 = await forfex.dataToUint16Array( new Blob( [archivo] ) )
 
-				const hashHex = await forfex.hash(secretoUint8)
+				const hashHex = await forfex.hash(secretoUint16)
 
-				const partes = forfex.share(secretoUint8, 5, 3)
+				const partes = forfex.share(secretoUint16, 10, 8)
 
 				let c = 0
 				for(tirita of partes) {
